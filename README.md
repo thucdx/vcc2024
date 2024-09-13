@@ -19,10 +19,12 @@ TODO:
 
 ## D. Sản xuất điện thoại
 Tag: sweep line, greedy
+
 TODO:
 
 ## E. Mô phỏng tấn công mạng
 Tag: dfs or segment tree
+
 TODO:
 
 ## F. Kiểm soát truy cập
@@ -41,19 +43,21 @@ Phân tích:
 Lời giải:
 
 ## H. Trò chơi bốc sỏi
-Short: Classical Nim
+Tag: Classical Nim
+
 TODO:
 
 ## I. 4G-Data 
 TODO:
 
 ## J. BST1 
-Tag: Combinatics
+Tag: Combinatorics
 
 TODO:
 
 ## K. BTS2 
 Tag: Fast Fourier Transform
+
 TODO:
 
 ## L. Chip
