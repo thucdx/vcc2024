@@ -30,8 +30,6 @@ using vvi = vector<vector<int>>;
 int main() {
 #ifdef LOCAL
     freopen("inp/G1.in", "r", stdin);
-//    freopen("/Volumes/Work/workspace/learning/algo/c++/vcc24/dethi/judge/viettel-24-satellite-11/tests/02", "r", stdin);
-//    freopen("out/g/02.out", "w", stdout);
 #endif
 
     ios::sync_with_stdio(false);
