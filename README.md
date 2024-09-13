@@ -75,7 +75,7 @@ Giả sử n lô hàng cần xử lý trong [l_i, r_i] với `i=1..n`.
 - Xét tập `Head` là tập hợp (unique) tất cả đầu mút `l_i, r_i`. 
 - Vỡi mỗi `h` trong `Head`, ta đếm `c[h]` xem có bao nhiêu đơn hàng đang được xử lý (bao gồm đơn hàng vừa bắt đầu, đang xử lý, hoặc kết thúc đúng tại thời điểm đó).
 Dễ thấy `max`(`c[h]` với `h` trong `Head`) chính là số dây chuyền cần thiết để xử lý toàn bộ `n` đơn hàng.
-Để tính được toàn bộ `c[h]` trong O(n log(n)) ta sử dụng kỹ thuật `sweep line`.
+Để tính được toàn bộ `c[h]` trong O(n log(n)) ta sử dụng kỹ thuật [`sweep line`](https://usaco.guide/plat/sweep-line?lang=cpp).
 
 Bước 2. Tính số dây chuyền nhỏ nhất để xử lý n-1 đơn hàng, có thể chọn bất kỳ 1 đơn hàng nào để loại bỏ.
 
@@ -217,26 +217,48 @@ Bài H này, khác ở 2 điểm:
 (2) Thay vì trả lời trạng thái hiện tại là thắng / thua thì đề bài đảm bảo người đầu luôn thắng, nhưng cần in ra tất cả cách khác nhau về nước đi đầu tiên.
 
 Điểm (1) tuy có khác, nhưng bản chất nếu state = a1 xor a2 ... xor a5 != 0 thì người đầu luôn thắng
-(Có thể chứng minh bằng lý thuyết và có thể thử tất cả trường hợp bằng code để kiểm chứng (Tham khảo [code thử](H_Analyze.cpp)))
+(Có thể chứng minh bằng lý thuyết và có thể thử tất cả trường hợp bằng code để kiểm chứng bài này và bài NIM gốc có winning state ngược nhau (Tham khảo [code thử](H_Analyze.cpp)))
 
-Như vậy, từ trạng thái ban đầu gồm (a1, a2, a3, a4, a5), ta cần các cách khác nhau, bao gồm:
-- tìm số lẻ cọc liền nhau (1 cọc, 3 cọc, 5 cọc).
-- số x <= các cọc được chọn và state_x = (a-x) XOR (b-x) ... = 0
+Như vậy, từ trạng thái ban đầu gồm `(a1, a2, a3, a4, a5)`, ta cần các cách bốc sỏi khác nhau, trong đó:
+- bốc từ số lẻ cọc liền nhau (1 cọc, 3 cọc, 5 cọc).
+- số x <= các cọc được chọn và `state_x = (a-x) XOR (b-x) ... = target`, trong đó `target = XOR(ai)` với a_i là số sỏi của cọc không được chọn.
 
+#### Code
+- [Code tìm tất cả trạng thái thắng, tương đương bài toán NIM gốc](H_Analyze.cpp)
+- [Tham khảo lời giải](H.cpp)
 
 ## I. 4G-Data
-TODO:
+Đề bài: Có 128 quả cân, 1 quả nặng 30kg, 1 quả 10 kg, và 126 quả 20 kg. Chỉ có 1 cân cân bằng. Thực hiện cân tối đa 11 lần để xác định số kg của từng quả cân.
+
+TODO: Bổ sung sau
 
 ## J. BST1
 Tag: Combinatorics
 
-Bài này mấu chốt phải nhận ra: k^2 = số cách chọn 2 điểm (i, j) trong thành phần liên thông có k đỉnh.
-Từ đó decomposition k^2 thành các pair...
+Bài này mấu chốt phải nhận ra: `k^2` = số cách chọn 2 điểm `(i, j)` không nhất thiết khác nhau, trong thành phần liên thông có `k` đỉnh.
+Từ đó decomposition `k^2` thành các pair 2 điểm.
+
+Cần chứng minh (hoặc nhận ra) bài toán gốc tương đương bài toán sau:
+- "*Với mỗi kịch bản chia cây n đỉnh thành k thành phần liên thông, ta ghi lại từng cặp đỉnh có thứ tự (a-b và b-a là khác nhau, ngay cả a-a cũng sẽ cần liệt kê 2 lần) và có kết nối với nhau (không bị cắt cạnh nào khiến mất liên thông). Hỏi có bao nhiêu cặp đỉnh như vậy?*"
+
+=> Từ đó, với mỗi đỉnh u (1 <= u <= n)
+- Ta dfs với gốc là v để tính xem khoảng cách từ u tới các đỉnh khác là bao nhiêu, ta được d[v] là kh/cách ngắn nhất từ u tới v. 
+- Xét 1 đỉnh v bất kỳ, nếu (u, v) là 1 cặp đỉnh được liệt kê, thì (u,v) phải thuộc 1 thành phần liên thông, do vậy việc bỏ bớt k cạnh không được nằm trên đường đi ngắn nhât giữa u và v. Mà cây chỉ có n-1 cạnh, lại không được chọn trong dist[u,v] cạnh nằm trên đường u->v
+=> Có C(k, n-1-d[v]) cách chọn k cạnh bỏ đi từ tập n-1-dist[v].
+=> Duyệt qua tất cả đỉnh u, và toàn bộ đỉnh v.
+
+Để tính `C(k, n)` thì ta thấy `C(k, n) = n! / k! / (n - k)!`. 
+- Dễ dàng tính `i! % MOD` với mọi i <= 10^6 bằng cách tính từ dưới lên.
+- Với `1/k!` thì ta tính `inverse(k!)` như sau: dễ thấy `MOD` là số nguyên tố, nên với mọi `1 <= i < MOD`  thì `i ^ (MOD - 1) = 1 (mod MOD)`
+=> `inverse(i) = i^(MOD-2) (mod MOD)` => dễ dàng tính được `1/k! % MOD` và `(1 / (n-k)!) % MOD`.
+
+Độ phức tạp: `O(n^2)`
 
 ### Code 
 [Tham khảo](J.cpp)
 
 ## K. BTS2
+Với constraint n lớn hơn, không thể giải với O(n^2), cần biến đổi và giải với Fast Fourier Transform.
 
 Tag: Fast Fourier Transform
 
@@ -245,5 +267,7 @@ TODO:
 ## L. Chip
 TODO:
 
-
 # Nhận xét
+- Đề thi rất dài, cover nhiều dạng bài chỉ dân chuyên gốc, và luyện đủ lâu mới có thể làm nhanh được.
+- Các bài cơ bản không quá khó, không nặng về triển khai nhưng phải tư duy đúng, và thiết kế được thuật toán phù hợp; đề cũng khá hay nhưng cần thời gian để suy ngẫm.
+- Có lẽ hơi nặng với 1 cuộc thi nội bộ, cho đối tượng đang đi làm.
